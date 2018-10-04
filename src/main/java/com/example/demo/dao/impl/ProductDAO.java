@@ -65,16 +65,4 @@ public class ProductDAO implements IProductDAO {
         return products;
     }
 
-    @Override
-    public String getNames() {
-        try (Connection conn = JDBCUtils.getAccountsConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_ORDER);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            return resultSet.getString("data");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Strings.EMPTY;
-    }
 }
