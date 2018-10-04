@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
-@CrossOrigin(origins = {"http://localhost:4200"})
+@CrossOrigin(origins = {"https://http://products-order.herokuapp.com"})
 public class OrderController {
 
     @Autowired
