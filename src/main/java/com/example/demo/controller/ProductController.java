@@ -10,7 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
-@CrossOrigin(origins = {"https://http://products-order.herokuapp.com"})
+@CrossOrigin(origins = {"https://products-order.herokuapp.com"})
 public class ProductController {
 
 
