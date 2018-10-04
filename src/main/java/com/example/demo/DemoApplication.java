@@ -17,8 +17,7 @@ public class DemoApplication {
 		try {
 			dbUri = new URI(System.getenv("DATABASE_URL"));
 			String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-			System.out.println(dbUrl
-            );
+			System.out.println(dbUrl);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
