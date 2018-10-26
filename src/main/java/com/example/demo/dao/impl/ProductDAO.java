@@ -1,68 +1,77 @@
 package com.example.demo.dao.impl;
 
+import com.example.demo.core.mappers.PriceMapper;
+import com.example.demo.core.mappers.ProductMapper;
+import com.example.demo.core.utils.JDBCUtils;
 import com.example.demo.dao.IProductDAO;
-import com.example.demo.model.Product;
-import com.example.demo.utils.JDBCUtils;
-import com.example.demo.utils.MapperUtils;
-import org.apache.logging.log4j.util.Strings;
+import com.example.demo.entity.Market;
+import com.example.demo.entity.Price;
+import com.example.demo.entity.Product;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 @Repository
 public class ProductDAO implements IProductDAO {
-
-    public List<Product> getProductMarket() {
-        List<Product> products = new ArrayList<>();
-
-        try (Connection conn = JDBCUtils.getAccountsConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_MARKET_PRODUCT);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                products.add(MapperUtils.productMapper(resultSet));
-            }
-        } catch (Exception e) {
-        }
-
-        return products;
-    }
-
-
-    public Boolean addProduct(Map<String, Object> params) {
-
-        try (Connection conn = JDBCUtils.getAccountsConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(SQL_ADD_PRODUCT);
-            preparedStatement.setInt(1, (int) params.get("product_id"));
-            preparedStatement.setInt(2, (int) params.get("quantity"));
-            preparedStatement.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return true;
+    @Override
+    public Product save(Product entity) {
+        return null;
     }
 
     @Override
-    public List<Product> getProductMarket(Integer price) {
-        List<Product> products = new ArrayList<>();
-
-        try (Connection conn = JDBCUtils.getAccountsConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(SQL_GET_MARKET_PRODUCT_BY_PRICE);
-            preparedStatement.setInt(1, price);
+    public List<Product> getProductFromMarket(Market market) {
+        try {
+            Connection connection = JDBCUtils.getAccountsConnection();
+            PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement("SELECT" +
+                    "  p.product_id," +
+                    "  p.name product," +
+                    "  plm.price," +
+                    "  plm.dimension" +
+                    " FROM price_list_market plm" +
+                    " INNER JOIN product p on p.product_id = plm.product_id" +
+                    " INNER JOIN market m on m.market_id = plm.market_id" +
+                    " WHERE m.market_id = ?");
+            preparedStatement.setInt(1, market.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
+            List<Product> products = Lists.newArrayList();
             while (resultSet.next()) {
-                products.add(MapperUtils.productMapper(resultSet));
+                Product product = new ProductMapper().entity(resultSet).convert();
+                Price price = new PriceMapper().entity(resultSet).convert();
+                product.setPrice(price);
+                products.add(product);
             }
+            resultSet.close();
+            connection.close();
+            return products;
         } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        return products;
+        return null;
+    }
+    
+    @Override
+    public Product update(Product entity) {
+        return null;
     }
 
+    @Override
+    public boolean removeById(Integer entityId) {
+        return false;
+    }
+
+    @Override
+    public Product getEntityById(Integer entityId) {
+        return null;
+    }
+
+    @Override
+    public List<Product> getEntities() {
+        return null;
+    }
 }
