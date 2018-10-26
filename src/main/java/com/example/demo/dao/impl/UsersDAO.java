@@ -59,6 +59,7 @@ public class UsersDAO implements IUsersDAO {
             PreparedStatement preparedStatement = Objects
                     .requireNonNull(connection)
                     .prepareStatement(SQL_USER_UPDATE);
+
             preparedStatement.setString(1, entity.getLogin());
             preparedStatement.setString(2, entity.getEmail());
             preparedStatement.setString(3, entity.getPassword());
@@ -80,6 +81,7 @@ public class UsersDAO implements IUsersDAO {
             PreparedStatement preparedStatement = Objects
                     .requireNonNull(connection)
                     .prepareStatement(SQL_REMOVE_USER_BY_ID);
+
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             deleted = resultSet.next();
@@ -88,6 +90,7 @@ public class UsersDAO implements IUsersDAO {
         if (!deleted) {
             throw new DataNotFoundException(ErrorConstants.CANT_DELETE, ObjectTypes.USER, Operations.REMOVE);
         }
+
         return deleted;
     }
 
