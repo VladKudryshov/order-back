@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="MyApp" packages="">
+    <Appenders>
+        <RollingFile name="RollingFile" fileName="applogs/app.log"
+                     filePattern="applogs/app-%d{yyyy-MM-dd-HH-mm}.log">
+            <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
+            <CronTriggeringPolicy schedule="0 0 0 ? * * *"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="applogs" maxDepth="1">
+                    <IfFileName glob="app-????-??-??-??-??.log">
+                        <IfAny>
+                            <IfAccumulatedFileCount exceeds="2"/>
+                        </IfAny>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <Console name="console">
+            <PatternLayout pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} [%-5level] [[%c{1}:%L]] Message : %msg%n%throwable}"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="FATAL">
+
+        </Root>
+        <Logger name="com.example.demo" additivity="false" level="info" >
+            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="console"/>
+        </Logger>
+
+    </Loggers>
+</Configuration>

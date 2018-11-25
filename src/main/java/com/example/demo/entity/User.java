@@ -1,14 +1,8 @@
 package com.example.demo.entity;
 
-import com.example.demo.entity.enums.Operations;
 import com.example.demo.entity.enums.Role;
-import com.example.demo.entity.enums.UserOperations;
 import com.example.demo.entity.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Lists;
-
-import java.util.List;
-import java.util.Objects;
 
 public class User {
     private Integer id;
@@ -67,22 +61,4 @@ public class User {
         this.status = status;
     }
 
-    public List<String> errorField(UserOperations operation){
-
-        List<String> errorFields = Lists.newArrayList();
-        if (Objects.isNull(id)){
-            errorFields.add("user_id");
-        }
-        if (Objects.isNull(login) && operation.equals(UserOperations.CHANGE_LOGIN)){
-            errorFields.add("login");
-        }
-        if (Objects.isNull(email) && operation.equals(UserOperations.CHANGE_EMAIL)){
-            errorFields.add("email");
-        }
-        if (Objects.isNull(password) && operation.equals(UserOperations.CHANGE_PASSWORD)){
-            errorFields.add("password");
-        }
-
-        return errorFields;
-    }
 }

@@ -4,13 +4,13 @@ import java.util.List;
 
 public interface AppServices <T> {
 
-    T saveEntity(T entity);
+    T save(T entity);
 
-    T editEntity(T entity);
+    T edit(T entity);
 
-    boolean removeEntity(T entity);
+    void remove(Integer id);
 
-    T getEntity(T entity);
+    T get(Integer id);
 
     List<T> getAll();
 

@@ -5,7 +5,9 @@ import java.util.List;
 public class Market {
     private Integer id;
     private String name;
-    private List<Product> products;
+    private String description;
+    private List<String> phones;
+    private User user;
 
     public Integer getId() {
         return id;
@@ -23,11 +25,27 @@ public class Market {
         this.name = name;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<String> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<String> phones) {
+        this.phones = phones;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -1,44 +1,51 @@
 package com.example.demo.controllers;
 
 import com.example.demo.controllers.abstr.IControllerApp;
+import com.example.demo.dao.IMarketDAO;
 import com.example.demo.entity.Market;
+import com.example.demo.entity.enums.ObjectTypes;
+import com.example.demo.entity.enums.Operations;
+import com.example.demo.entity.enums.TypeError;
+import com.example.demo.exceptions.DataNotFoundException;
 import com.example.demo.service.IMarketService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@Api(value = "/api/markets", description = "Get information about markets")
 @RestController
-@RequestMapping("/market")
+@RequestMapping("api/markets")
 @CrossOrigin(origins = {"https://products-order.herokuapp.com"})
 public class MarketController extends IControllerApp<Market> {
 
     @Autowired
-    IMarketService service;
+    private IMarketService service;
 
-
-    @Override
-    protected Market getEntity(Market entity) {
-        return null;
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    protected Market get(@PathVariable Integer id) {
+        return service.get(id);
     }
 
-    @Override
-    protected List<Market> getEntities() {
-        return null;
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    protected List<Market> getAll() {
+        return service.getAll();
     }
 
-    @Override
-    protected Boolean removeEntity(Market entity) {
-        return null;
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    protected void remove(@PathVariable Integer id) {
+        service.remove(id);
     }
 
-    @Override
-    protected Market saveEntity(Market entity) {
-        return service.saveEntity(entity);
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    protected Market save(@RequestBody Market entity) {
+        return service.save(entity);
     }
 
-    @Override
-    protected Market editEntity(Market entity) {
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    protected Market edit(@RequestBody Market entity) {
         return null;
     }
 }

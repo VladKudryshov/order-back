@@ -2,40 +2,50 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dao.IMarketDAO;
 import com.example.demo.entity.Market;
+import com.example.demo.entity.enums.ObjectTypes;
+import com.example.demo.entity.enums.Operations;
+import com.example.demo.entity.enums.TypeError;
+import com.example.demo.exceptions.DataNotFoundException;
 import com.example.demo.service.IMarketService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class MarketService implements IMarketService {
+public class MarketService implements IMarketService{
+
     @Autowired
-    IMarketDAO dao;
+    private IMarketDAO dao;
 
     @Override
-    public Market saveEntity(Market entity) {
+    public Market save(Market entity) {
         return dao.save(entity);
     }
 
     @Override
-    public Market editEntity(Market entity) {
-        return dao.update(entity);
+    public Market edit(Market entity) {
+        get(entity.getId());
+        return null;
     }
 
     @Override
-    public boolean removeEntity(Market entity) {
-        return dao.removeById(entity.getId());
+    public void remove(Integer id) {
+        get(id);
+        dao.removeById(id);
     }
 
     @Override
-    public Market getEntity(Market entity) {
-        return dao.getEntityById(entity.getId());
+    public Market get(Integer id) {
+        return dao.getById(id).orElseThrow(() ->
+                new DataNotFoundException("Market not found",
+                        TypeError.NOT_FOUND,
+                        ObjectTypes.MARKET,
+                        Operations.GET));
     }
 
     @Override
     public List<Market> getAll() {
-        return dao.getEntities();
+        return dao.getAll();
     }
 }

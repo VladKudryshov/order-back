@@ -1,12 +1,15 @@
 package com.example.demo.core.utils;
 
 import org.postgresql.ds.PGConnectionPoolDataSource;
+import org.springframework.jdbc.datasource.lookup.DataSourceLookupFailureException;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class JDBCUtils {
+public class DataBaseUtils {
     private static PGConnectionPoolDataSource poolDataSource = null;
+    public static final String DB_VARCHAR = "VARCHAR";
 
     public static Connection getAccountsConnection() {
         if (poolDataSource == null) {
@@ -20,6 +23,6 @@ public class JDBCUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        throw new DataSourceLookupFailureException("Can't connect to datasource");
     }
 }

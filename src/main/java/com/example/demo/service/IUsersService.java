@@ -4,8 +4,17 @@ import com.example.demo.entity.User;
 import com.example.demo.entity.enums.UserOperations;
 import com.example.demo.service.abstr.AppServices;
 
-public interface IUsersService extends AppServices<User> {
-    void removeAll();
-    User editEntity(User entity, UserOperations operation);
+import java.util.List;
 
+public interface IUsersService extends AppServices<User>{
+
+    void removeAll();
+
+    void changePersonalData(User entity);
+
+    void changeEmail(User entity);
+
+    void changePassword(User entity);
+
+    User changeRole(User entity);
 }

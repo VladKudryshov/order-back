@@ -2,77 +2,87 @@ package com.example.demo.controllers;
 
 import com.example.demo.controllers.abstr.IControllerApp;
 import com.example.demo.entity.User;
-import com.example.demo.entity.enums.UserOperations;
-import com.example.demo.exceptions.DataNotFoundException;
+import com.example.demo.entity.enums.Role;
 import com.example.demo.service.IUsersService;
-import com.google.common.collect.ImmutableMap;
+import com.example.demo.core.utils.ProjectUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
-@Api(value = "/api/user", description = "Get information about users")
+@Api(value = "/api/users", description = "Get information about users")
 @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid request"),
         @ApiResponse(code = 401, message = "Unauthorized")})
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/users")
 @CrossOrigin(origins = {"https://products-order.herokuapp.com"})
 public class UserController extends IControllerApp<User> {
+
+    private final static Logger LOGGER = ProjectUtils.getLogger(UserController.class);
+
     @Autowired
     IUsersService service;
 
-    @Override
-    @RequestMapping(value = "/get", method = RequestMethod.POST)
-    protected User getEntity(User entity) {
-        return service.getEntity(entity);
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    protected User get(@PathVariable Integer id) {
+        return service.get(id);
     }
 
-    @Override
-    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
-    protected List<User> getEntities() {
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    protected List<User> getAll() {
         return service.getAll();
     }
 
-    @Override
-    @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    protected Boolean removeEntity(User entity) {
-        return service.removeEntity(entity);
+    @RequestMapping(value = "changeInfo", method = RequestMethod.PUT)
+    protected User edit(@RequestBody User entity) {
+        return service.edit(entity);
     }
 
-    @Override
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    protected User saveEntity(User entity) {
-        return service.saveEntity(entity);
+    @RequestMapping(value = "changeEmail", method = RequestMethod.PUT)
+    protected HttpStatus changeEmail(@RequestBody() Map<String, Object> params) {
+
+        return HttpStatus.OK;
     }
 
-    @Override
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    protected User editEntity(User entity) {
-        return service.editEntity(entity);
+    @RequestMapping(value = "{id}/changePassword", method = RequestMethod.PUT)
+    protected HttpStatus changePassword(
+            @PathVariable Integer id,
+            @RequestBody String password) {
+        User user = new User();
+        user.setId(id);
+        user.setPassword(password);
+        service.changePassword(user);
+        return HttpStatus.OK;
     }
 
-    @RequestMapping(value = "/changeLogin", method = RequestMethod.POST)
-    protected User changeLogin(User entity) {
-        return service.editEntity(entity, UserOperations.CHANGE_LOGIN);
+    @RequestMapping(value = "{id}/changeRole", method = RequestMethod.PUT)
+    protected ResponseEntity<User> changeRole( @PathVariable Integer id,
+                                                Role role) {
+        User user = new User();
+        user.setId(id);
+        user.setRole(role);
+        return new ResponseEntity<>(service.changeRole(user),HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/changeEmail", method = RequestMethod.POST)
-    protected User changeEmail(User entity) {
-        return service.editEntity(entity, UserOperations.CHANGE_EMAIL);
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    protected void remove(@PathVariable Integer id) {
+        service.remove(id);
     }
 
-    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
-    protected User changePassword(User entity) {
-        return service.editEntity(entity, UserOperations.CHANGE_PASSWORD);
-    }
-
-    @RequestMapping(value = "/removeAll", method = RequestMethod.GET)
+    @RequestMapping(value = "/remove", method = RequestMethod.DELETE)
     public void removeAll() {
         service.removeAll();
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    protected User save(@RequestBody User entity) {
+        return service.save(entity);
     }
 }
