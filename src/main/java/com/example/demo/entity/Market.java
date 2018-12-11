@@ -1,11 +1,15 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 public class Market {
+    @JsonIgnore
     private Integer id;
     private String name;
     private String description;
+    private String landing;
     private List<String> phones;
     private User user;
 
@@ -31,6 +35,14 @@ public class Market {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLanding() {
+        return landing;
+    }
+
+    public void setLanding(String landing) {
+        this.landing = landing;
     }
 
     public List<String> getPhones() {

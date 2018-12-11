@@ -21,8 +21,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="FATAL">
-
+        <Root level="INFO">
         </Root>
         <Logger name="com.example.demo" additivity="false" level="info" >
             <AppenderRef ref="RollingFile"/>

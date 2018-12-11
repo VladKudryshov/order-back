@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-public abstract class IControllerApp<T> {
-    protected abstract T get(Integer id);
+public abstract class IControllerApp<T,K> {
+    protected abstract T get(K id);
 
     protected abstract List<T> getAll();
 
-    protected abstract void remove(Integer id);
+    protected abstract void remove(K id);
 
     protected abstract T save(T entity);
 

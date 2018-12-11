@@ -8,7 +8,7 @@ public interface BaseDao <T,K>{
 
     T update(T entity);
 
-    void removeById(K entityId);
+    void removeById(Integer entityId);
 
     Optional<T> getById(K entityId);
 

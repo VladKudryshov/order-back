@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/users")
 @CrossOrigin(origins = {"https://products-order.herokuapp.com"})
-public class UserController extends IControllerApp<User> {
+public class UserController extends IControllerApp<User,Integer> {
 
     private final static Logger LOGGER = ProjectUtils.getLogger(UserController.class);
 

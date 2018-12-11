@@ -6,7 +6,7 @@ import com.example.demo.service.abstr.AppServices;
 
 import java.util.List;
 
-public interface IUsersService extends AppServices<User>{
+public interface IUsersService extends AppServices<User, Integer>{
 
     void removeAll();
 

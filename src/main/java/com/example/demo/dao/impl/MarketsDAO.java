@@ -26,9 +26,9 @@ import java.util.Optional;
 @Repository
 public class MarketsDAO implements IMarketDAO {
     private final static Logger LOGGER = ProjectUtils.getLogger(MarketsDAO.class);
-    private static final String SQL_DELETE_MARKETS_BY_ID = "DELETE FROM market WHERE market_id = :market_id";
-    private static final String SQL_CREATE_MARKET = "INSERT INTO market (name,description,phones) VALUES(:name,:description,:phones) RETURNING market.market_id";
-    private static final String SQL_GET_MARKET_BY_ID = "SELECT * FROM market WHERE market_id = :market_id";
+    private static final String SQL_DELETE_MARKETS_BY_ID = "DELETE FROM market WHERE id = :market_id";
+    private static final String SQL_CREATE_MARKET = "INSERT INTO market (name,description,phones) VALUES(:name,:description,:phones) RETURNING market.id";
+    private static final String SQL_GET_MARKET_BY_LANDING = "SELECT * FROM market WHERE landing = :landing";
     public static final String SQL_GET_MARKETS = "SELECT * FROM market";
 
     @Autowired
@@ -45,8 +45,8 @@ public class MarketsDAO implements IMarketDAO {
 
             MapSqlParameterSource parameters = new MapSqlParameterSource()
                     .addValue(MarketMapper.MARKET_NAME, entity.getName())
-                    .addValue(MarketMapper.DESCRIPTION, entity.getDescription())
-                    .addValue(MarketMapper.PHONES, array);
+                    .addValue(MarketMapper.MARKET_DESCRIPTION, entity.getDescription())
+                    .addValue(MarketMapper.MARKET_PHONES, array);
 
             namedParameterJdbcTemplate.update(SQL_CREATE_MARKET, parameters, holder);
             entity.setId(Objects.requireNonNull(holder.getKey()).intValue());
@@ -77,21 +77,7 @@ public class MarketsDAO implements IMarketDAO {
     }
 
     @Override
-    public Optional<Market> getById(Integer entityId) {
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue(MarketMapper.MARKET_ID, entityId, Types.INTEGER);
-
-        try {
-            return namedParameterJdbcTemplate
-                    .query(SQL_GET_MARKET_BY_ID,
-                            params,
-                            new MarketMapper())
-                    .stream()
-                    .findFirst();
-
-        } catch (Exception e) {
-            LOGGER.error("Can't get market: ", e);
-        }
+    public Optional<Market> getById(String entityId) {
         return Optional.empty();
     }
 
@@ -105,5 +91,24 @@ public class MarketsDAO implements IMarketDAO {
             LOGGER.error("Can't get markets: ", e);
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public Optional<Market> getByLanding(String landing) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue(MarketMapper.MARKET_LANDING, landing, Types.VARCHAR);
+
+        try {
+            return namedParameterJdbcTemplate
+                    .query(SQL_GET_MARKET_BY_LANDING,
+                            params,
+                            new MarketMapper())
+                    .stream()
+                    .findFirst();
+
+        } catch (Exception e) {
+            LOGGER.error("Can't get market: ", e);
+        }
+        return Optional.empty();
     }
 }
